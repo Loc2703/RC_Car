@@ -51,7 +51,7 @@ uint8_t rx_buff = '\0';
 uint8_t tx_buff = 0xAA;
 
 // debug
-uint8_t pwmV1, pwmV2, V1, V2;
+uint8_t pwmA, pwmB, V1, V2;
 
 /* USER CODE END PV */
 
@@ -69,6 +69,8 @@ uint8_t decode(uint8_t Vin, _Bool Mode);
 
 // return percent of value
 uint8_t map_(uint8_t value);
+
+
 
 //void pwm_(uint8_t V2, uint8_t V1);
 
@@ -120,32 +122,32 @@ uint8_t map_(uint8_t value)
 //	
 //  if (V1 == 7)
 //  {
-//		pwmV1 = pwmV2 = map_(V2);
+//		pwmA = pwmB = map_(V2);
 //		
 //		
-//    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV1);
+//    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmA);
 //		
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV2);
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmB);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 //  }
 //	else
 //	{
 //		if (V2 > 7)
 //		{
-//			pwmV1 = map_(V1);
-//			pwmV2 = pwmV1 * map_(V2) / 100;
+//			pwmA = map_(V1);
+//			pwmB = pwmA * map_(V2) / 100;
 //		}
 //		if (V2 < 7)
 //		{
-//			pwmV2 = map_(V1);
-//			pwmV1 = pwmV2 * map_(V2) / 100;
+//			pwmB = map_(V1);
+//			pwmA = pwmB * map_(V2) / 100;
 //		}
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV1);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
 //		
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV2);
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 //	}
 ////  HAL_Delay(50);
 //}
@@ -174,7 +176,6 @@ void controll(uint8_t value)
       // spin
       // A up B down
 //      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_ALL, map_(V2));
-			
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, map_(V2));
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, map_(V2));
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, map_(V2));
@@ -206,7 +207,7 @@ void controll(uint8_t value)
 		
 		if(V2 == 7)
 		{
-//			pwmV1 = pwmV2 = map_(V1);
+//			pwmA = pwmB = map_(V1);
 			
 			//LEFT
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, map_(V1));
@@ -219,26 +220,26 @@ void controll(uint8_t value)
 		
 		if (V2 < 7)
 		{
-			pwmV2 = map_(V1);
-			pwmV1 = pwmV2 / 100 * (100 - map_(V2));
+			pwmB = map_(V1);
+			pwmA = (float)pwmB / 100 * (100 - map_(V2));
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV1);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV2);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 		}
 		
 		if(V2 > 7)
 		{
-			pwmV1 = map_(V1);
-			pwmV2 = pwmV1 / 100 * (100 - map_(V2));
+			pwmA = map_(V1);
+			pwmB = (float)pwmA / 100 * (100 - map_(V2));
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV1);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV2);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 		}
   }
   if (V1 < 7)
@@ -250,7 +251,7 @@ void controll(uint8_t value)
 		
 		if(V2 == 7)
 		{
-//			pwmV1 = pwmV2 = map_(V1);
+//			pwmA = pwmB = map_(V1);
 			
 			//LEFT
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, map_(V1));
@@ -263,26 +264,26 @@ void controll(uint8_t value)
 		
 		if (V2 < 7)
 		{
-			pwmV2 = map_(V1);
-			pwmV1 = pwmV2 / 100 * (100 - map_(V2));
+			pwmB = map_(V1);
+			pwmA = (float)pwmB / 100 * (100 - map_(V2));
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV1);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV2);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 		}
 		
 		if(V2 > 7)
 		{
-			pwmV1 = map_(V1);
-			pwmV2 = pwmV1 / 100 * (100 - map_(V2));
+			pwmA = map_(V1);
+			pwmB = (float)pwmA / 100 * (100 - map_(V2));
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmV1);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmV1);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, pwmA);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
 			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmV2);
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmV2);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
 		}
 		
   }

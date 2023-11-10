@@ -56,12 +56,17 @@ void loop() {
     {
       incomingByte = udp.read();
     }
+    else
+    {
+      incomingByte = 119; //'w'
+    }
     unsigned char stmRequest = Serial.read();
     if(stmRequest == 0xAA)
     {
       // Send data to uart
       // Serial.printf("UDP content: %u - %c\n",incomingByte, incomingByte);
       Serial.write(incomingByte);
+      incomingByte = 119;
     }
 
 }
