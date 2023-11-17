@@ -199,4 +199,7 @@ int main()
         printf("Get V value = ");
         scanf("%hhu", &Value);
         controll(Value);
-     
+        printf("Continue? 1: Yes | 0: No\n");
+    }
+    return 0;
+}
