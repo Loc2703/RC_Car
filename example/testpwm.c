@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-unsigned char PIN_12, PIN_13, PIN_14, PIN_15, Value, V1, V2;
+unsigned char PIN_12, PIN_13, PIN_14, PIN_15, Value, V1, V2, pwmA, pwmB;
 
 unsigned char decode(unsigned char Vin, _Bool Mode);
 
@@ -122,7 +122,7 @@ void pwm(unsigned char pwmA, unsigned char pwmB)
     // __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwmA);
     // __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, pwmB);
     // __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, pwmB);
-    printf("pwmA = %u \t pwmB = %u\n", pwmA, pwmB);
+    printf("pwmA = %hhu \t pwmB = %hhu\n", pwmA, pwmB);
 }
 
 void controll(unsigned char value)
@@ -197,8 +197,6 @@ int main()
     while (func == 1)
     {
         printf("Get V value = ");
-        scanf("%u", &Value);
+        scanf("%hhu", &Value);
         controll(Value);
-    }
-    return 0;
-}
+     
