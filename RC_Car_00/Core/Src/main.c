@@ -209,25 +209,41 @@ void pwm(uint8_t pwmA, uint8_t pwmB)
 
 void controll(uint8_t value)
 {
-  uint8_t V1, V2;
+//  uint8_t V1, V2;
 
   V1 = decode(value, 0);
   V2 = decode(value, 1);
 
   if (V2 == 7)
   {
-     pwm(map_(V1),map_(V1));
+		if( V1 == 7)
+      Stop();
+    else
+    {
+      pwmA = pwmB = map_(V1);
+      pwm(pwmA, pwmB);
+  //    pwm(map_(V1),map_(V1));
+      if(V1 < 7)
+        Back();
+      else
+        Forward();
+    }
   }
   if (V2 < 7)
   {
     if (V1 == 7)
     {
+			pwmA = pwmB = map_(V2);
       L_Spin();
-      pwm(map_(V2),map_(V2));
+			pwm(pwmA, pwmB);
+//      pwm(map_(V2),map_(V2));
     }
     else
     {
-      pwm(map_(V1)-((~(V2-7)+1)<<1), map_(V1));
+			pwmA = map_(V1)-((~(V2-7)+1)<<1);
+			pwmB = map_(V1);
+			pwm(pwmA, pwmB);
+//      pwm(map_(V1)-((~(V2-7)+1)<<1), map_(V1));
       if (V1 > 7)
         Forward();
       else
@@ -238,12 +254,17 @@ void controll(uint8_t value)
   {
     if (V1 == 7)
     {
+			pwmA = pwmB = map_(V2);
       R_Spin();
-      pwm(map_(V2),map_(V2));
+			pwm(pwmA, pwmB);
+//      pwm(map_(V2),map_(V2));
     }
     else
     {
-      pwm(map_(V1), map_(V1) - ((V2-7)<<1));
+			pwmA = map_(V1);
+			pwmB = map_(V1) - ((V2-7)<<1);
+			pwm(pwmA, pwmB);
+//      pwm(map_(V1), map_(V1) - ((V2-7)<<1));
       if (V1 > 7)
         Forward();
       else

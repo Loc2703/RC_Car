@@ -4,8 +4,7 @@
 
 WiFiUDP udp;
 unsigned int localUdpPort = 4210;
-unsigned char incomingByte;
-
+unsigned char incomingByte = 119;
 
 void setup() {
     // WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
@@ -44,6 +43,7 @@ void setup() {
     //Start UDP
     udp.begin(localUdpPort);
     Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+
 }
 
 void loop() {
@@ -55,10 +55,6 @@ void loop() {
     if(packetSize)
     {
       incomingByte = udp.read();
-    }
-    else
-    {
-      incomingByte = 119; //'w'
     }
     unsigned char stmRequest = Serial.read();
     if(stmRequest == 0xAA)
