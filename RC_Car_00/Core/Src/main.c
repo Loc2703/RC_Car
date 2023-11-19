@@ -210,39 +210,50 @@ void pwm(uint8_t pwmA, uint8_t pwmB)
 
 unsigned char map_pwm_bitwise(unsigned char V1, unsigned char V2)
 {
-    unsigned char map[8][8] = {
-        {0, 10, 25, 40, 55, 70, 85, 100}, // 0
-        {15, 13, 11, 8, 6, 4, 2, 0},      // 1
-        {30, 26, 21, 17, 12, 8, 3, 0},    // 2
-        {45, 38, 32, 25, 18, 11, 5, 0},   // 3
-        {60, 51, 42, 33, 24, 15, 6, 0},   // 4
-        {75, 64, 53, 41, 30, 19, 8, 0},   // 5
-        {90, 77, 63, 50, 36, 23, 9, 0},   // 6
-        {100, 85, 70, 55, 40, 25, 10, 0}  // 7
-    };
-    V1 = (V1 < 7) ? (7 - V1) : (V1 - 7);
-    V2 = (V2 < 7) ? (7 - V2) : (V2 - 7);
-    return map[V1][V2];
+  // unsigned char map[8][8] = {
+  //     {0, 10, 25, 40, 55, 70, 85, 100}, // 0
+  //     {15, 13, 11, 8, 6, 4, 2, 0},      // 1
+  //     {30, 26, 21, 17, 12, 8, 3, 0},    // 2
+  //     {45, 38, 32, 25, 18, 11, 5, 0},   // 3
+  //     {60, 51, 42, 33, 24, 15, 6, 0},   // 4
+  //     {75, 64, 53, 41, 30, 19, 8, 0},   // 5
+  //     {90, 77, 63, 50, 36, 23, 9, 0},   // 6
+  //     {100, 85, 70, 55, 40, 25, 10, 0}  // 7
+  // };
+  // Use for bug joystick V2 can't send 100% (14)
+  unsigned char map[8][8] = {
+      {0, 25, 40, 55, 70, 85, 100, 100}, // 0
+      {15, 11, 8, 6, 4, 2, 0, 0},      // 1
+      {30, 21, 17, 12, 8, 3, 0, 0},    // 2
+      {45, 32, 25, 18, 11, 5, 0, 0},   // 3
+      {60, 42, 33, 24, 15, 6, 0, 0},   // 4
+      {75, 53, 41, 30, 19, 8, 0, 0},   // 5
+      {90, 63, 50, 36, 23, 9, 0, 0},   // 6
+      {100, 70, 55, 40, 25, 10, 0, 0}  // 7
+  };
+  V1 = (V1 < 7) ? (7 - V1) : (V1 - 7);
+  V2 = (V2 < 7) ? (7 - V2) : (V2 - 7);
+  return map[V1][V2];
 }
 
 void controll(uint8_t value)
 {
-//  uint8_t V1, V2;
+  //  uint8_t V1, V2;
 
   V1 = decode(value, 0);
   V2 = decode(value, 1);
 
   if (V2 == 7)
   {
-		if( V1 == 7)
+    if (V1 == 7)
       Stop();
     else
     {
-      //pwmA = pwmB = map_(V1);
-      pwmA = pwmB = map_pwm_bitwise(V1,V2);
+      // pwmA = pwmB = map_(V1);
+      pwmA = pwmB = map_pwm_bitwise(V1, V2);
       pwm(pwmA, pwmB);
-  //    pwm(map_(V1),map_(V1));
-      if(V1 < 7)
+      //    pwm(map_(V1),map_(V1));
+      if (V1 < 7)
         Back();
       else
         Forward();
@@ -252,48 +263,48 @@ void controll(uint8_t value)
   {
     if (V1 == 7)
     {
-			// pwmA = pwmB = map_(V2);
-      pwmA = pwmB = map_pwm_bitwise(V1,V2);
+      // pwmA = pwmB = map_(V2);
+      pwmA = pwmB = map_pwm_bitwise(V1, V2);
       L_Spin();
-			pwm(pwmA, pwmB);
-//      pwm(map_(V2),map_(V2));
+      pwm(pwmA, pwmB);
+      //      pwm(map_(V2),map_(V2));
     }
     else
     {
-			// pwmA = map_(V1)-((~(V2-7)+1)<<1);
-			// pwmB = map_(V1);
-      pwmB = map_pwm_bitwise(V1,7);
-      pwmA = map_pwm_bitwise(V1,V2);
-			pwm(pwmA, pwmB);
-//      pwm(map_(V1)-((~(V2-7)+1)<<1), map_(V1));
+      // pwmA = map_(V1)-((~(V2-7)+1)<<1);
+      // pwmB = map_(V1);
+      pwmB = map_pwm_bitwise(V1, 7);
+      pwmA = map_pwm_bitwise(V1, V2);
+      pwm(pwmA, pwmB);
+      //      pwm(map_(V1)-((~(V2-7)+1)<<1), map_(V1));
       if (V1 > 7)
         Forward();
       else
-				Back();
+        Back();
     }
   }
   if (V2 > 7)
   {
     if (V1 == 7)
     {
-			// pwmA = pwmB = map_(V2);
-      pwmA = pwmB = map_pwm_bitwise(V1,V2);
-			pwm(pwmA, pwmB);
-//      pwm(map_(V2),map_(V2));
+      // pwmA = pwmB = map_(V2);
+      pwmA = pwmB = map_pwm_bitwise(V1, V2);
+      pwm(pwmA, pwmB);
+      //      pwm(map_(V2),map_(V2));
       R_Spin();
     }
     else
     {
-			// pwmA = map_(V1);
-			// pwmB = map_(V1) - ((V2-7)<<1);
+      // pwmA = map_(V1);
+      // pwmB = map_(V1) - ((V2-7)<<1);
       pwmA = map_pwm_bitwise(V1, 7);
-      pwmB = map_pwm_bitwise(V1,V2);
-			pwm(pwmA, pwmB);
-//      pwm(map_(V1), map_(V1) - ((V2-7)<<1));
+      pwmB = map_pwm_bitwise(V1, V2);
+      pwm(pwmA, pwmB);
+      //      pwm(map_(V1), map_(V1) - ((V2-7)<<1));
       if (V1 > 7)
         Forward();
       else
-				Back();
+        Back();
     }
   }
 }
