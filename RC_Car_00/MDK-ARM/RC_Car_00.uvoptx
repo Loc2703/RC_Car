@@ -163,12 +163,12 @@
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pwmV1,0x0A</ItemText>
+          <ItemText>pwmA,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pwmV2,0x0A</ItemText>
+          <ItemText>pwmB,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>

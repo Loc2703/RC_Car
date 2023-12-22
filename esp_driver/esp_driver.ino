@@ -4,8 +4,7 @@
 
 WiFiUDP udp;
 unsigned int localUdpPort = 4210;
-unsigned char incomingByte;
-
+unsigned char incomingByte = 119;
 
 void setup() {
     // WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
@@ -30,7 +29,7 @@ void setup() {
     bool res;
     // res = wm.autoConnect(); // auto generated AP name from chipid
     // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-    res = wm.autoConnect("AutoConnectAP","password"); // password protected ap
+    res = wm.autoConnect("ESP_Loc","password"); // password protected ap
 
     if(!res) {
         Serial.println("Failed to connect");
@@ -44,6 +43,7 @@ void setup() {
     //Start UDP
     udp.begin(localUdpPort);
     Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+
 }
 
 void loop() {
@@ -62,6 +62,7 @@ void loop() {
       // Send data to uart
       // Serial.printf("UDP content: %u - %c\n",incomingByte, incomingByte);
       Serial.write(incomingByte);
+      incomingByte = 119;
     }
 
 }
